@@ -4,6 +4,7 @@ import az.project.projectdb.entity.Person;
 import az.project.projectdb.service.PersonInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -23,6 +24,15 @@ public class Controller {
         model.addAttribute("persons", persons);
         return "persons";
     }
+
+    @GetMapping("/student-info")
+    public String getStudentInfo(Model model) throws SQLException {
+        List<Person> persons = oracleService.callPersonInfoStudent();
+        model.addAttribute("persons", persons);
+        return "persons";
+    }
+
+
     @GetMapping("/update/{id}")
     public String getUpdateInfo(@PathVariable Long id, Model model) {
         Optional<Person> optionalPerson = oracleService.findById(id);
@@ -50,8 +60,26 @@ public class Controller {
 
 
     @PostMapping("/update")
-    public String edit(@ModelAttribute Person person) {
+    public String edit(@ModelAttribute Person person, Model model) throws SQLException {
+        String regex = "^[A-Z][a-zA-Z]{2,14}$";
+
+        if (!person.getName().matches(regex)) {
+            model.addAttribute("message", "Inavlid Name");
+            return "update";
+        }
+
+        if (!person.getSurname().matches(regex)) {
+            model.addAttribute("message", "Inavlid Surname");
+            return "update";
+        }
+
+        if (!person.getMiddleName().matches(regex)) {
+            model.addAttribute("message", "Invalid Middle Name");
+            return "update";
+        }
+
         oracleService.update(person);
+
         return "redirect:/person-info";
     }
 
@@ -63,11 +91,29 @@ public class Controller {
 
 
     @PostMapping("/addPerson")
-    public String addPerson(@ModelAttribute Person person,Model model) {
+    public String addPerson(Person person, Model model) {
+        String regex = "^[A-Z][a-zA-Z]{2,14}$";
+
+        if (!person.getName().matches(regex)) {
+            model.addAttribute("message", "Inavlid Name.");
+            return "addPerson";
+        }
+
+        if (!person.getSurname().matches(regex)) {
+            model.addAttribute("message", "Inavlid Surname.");
+            return "addPerson";
+        }
+
+        if (!person.getMiddleName().matches(regex)) {
+            model.addAttribute("message", "Invalid Middle Name.");
+            return "addPerson";
+        }
+
         oracleService.addPerson(person);
-        model.addAttribute("addPerson", person);
+
         return "redirect:/person-info";
     }
+
 
     @GetMapping("/addPerson")
     public String add(Model model,Person person) {

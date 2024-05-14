@@ -35,6 +35,18 @@ public class PersonInfoService {
         return resultList;
     }
 
+    public List<Person> callPersonInfoStudent() {
+
+        NamedParameterJdbcTemplate namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+
+        String sql = "SELECT *FROM EDUMAN_COMMON.COM_PERSONS p JOIN EDUMAN_MANAGEMENT.MAN_STUDENTS s ON s.COM_PERSON_ID  = p.id WHERE ROWNUM<200";
+        Map<String, Object> paramMap = new HashMap<>();
+
+        List<Person> resultList = namedJdbcTemplate.query(sql, paramMap, new PersonInfoRowMapper());
+
+        return resultList;
+    }
+
     public void update(Person person) {
         int rowsAffected = jdbcTemplate.update("BEGIN EDUMAN_COMMON.update_method_farid(?, ?, ?, ?); END;"
                 , person.getId() , person.getName(), person.getSurname(), person.getMiddleName());
@@ -67,14 +79,14 @@ public class PersonInfoService {
 
 
     public void addPerson(Person person) {
-        String sql = "BEGIN EDUMAN_COMMON.add_method_farid(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); END;";
-        jdbcTemplate.update(sql, generateRandomId(), person.getName(), person.getSurname(), person.getMiddleName(), person.getSex(),  person.getComPersonUniqId(), person.getActive(), person.getNotificationStatus(), person.getNewC(), person.getSurname());
+        String sql = "BEGIN EDUMAN_COMMON.add_method_farid(?, ?, ?, ?, ?); END;";
+        jdbcTemplate.update(sql, generateRandomId(), person.getName(), person.getSurname(), person.getMiddleName(), person.getSex());
     }
 
     public void deleteById(Long id) {
         String sql = "BEGIN EDUMAN_COMMON.delete_method_farid(?); END; ";
         int update = jdbcTemplate.update(sql, new Object[]{id});
-        System.out.println("deleted: " + update);
+        System.out.println("deleted: " + update );
     }
 
     public Optional<Person> deleteFindById(Long id) {

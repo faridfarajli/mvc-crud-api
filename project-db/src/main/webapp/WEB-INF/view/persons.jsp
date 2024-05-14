@@ -5,6 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Person Info</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjusted to fit all columns */
+            grid-gap: 5px;
+            padding: 5px;
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        }
+        .grid-item {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: center;
+        }
+        .grid-item-header {
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
     <script>
         function sortTable(n) {
             var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -46,52 +64,52 @@
 </head>
 <body>
 <h1>Person Information</h1>
-<table border="1" id="personTable">
-    <thead>
-    <tr>
-        <th onclick="sortTable(0)">ID</th>
-        <th onclick="sortTable(1)">Name</th>
-        <th onclick="sortTable(2)">Surname</th>
-        <th onclick="sortTable(3)">Middle Name</th>
-        <th onclick="sortTable(4)">Sex</th>
-        <th onclick="sortTable(5)">Birth Date</th>
-        <th onclick="sortTable(6)">Com Person Uniq ID</th>
-        <th onclick="sortTable(7)">Change Date</th>
-        <th onclick="sortTable(8)">Active</th>
-        <th onclick="sortTable(9)">Notification Status</th>
-        <th onclick="sortTable(10)">New C</th>
-        <th onclick="sortTable(11)">Old Username</th>
-        <th>Edit</th>
-        <th>Delete</th>
-        <td><a href="http://localhost:8080/addPerson">Add</a></td>
 
 
 
-    </tr>
-    </thead>
+<select id="" name="links" size="1" onchange="window.location.href=this.value">
+    <option <c:if test = "${param.type==0}">selected</c:if> value="http://localhost:8080/person-info?type=0">All</option>
+    <option <c:if test = "${param.type==1}">selected</c:if> value="http://localhost:8080/student-info?type=1">Student</option>
+</select>
+<a href="http://localhost:8080/addPerson/">Add</a>
 
-    <tbody>
+<div class="grid-container">
+    <div class="grid-item" onclick="sortTable(0)">ID</div>
+    <div class="grid-item" onclick="sortTable(1)">Name</div>
+    <div class="grid-item" onclick="sortTable(2)">Surname</div>
+    <div class="grid-item" onclick="sortTable(3)">Middle Name</div>
+    <div class="grid-item" onclick="sortTable(4)">Sex</div>
+    <div class="grid-item" onclick="sortTable(5)">Birth Date </div>
+    <div class="grid-item" onclick="sortTable(6)">Com Person Uniq ID</div>
+    <div class="grid-item" onclick="sortTable(7)">Change Date</div>
+    <div class="grid-item" onclick="sortTable(8)">Active</div>
+    <div class="grid-item" onclick="sortTable(9)">Notification Status</div>
+    <div class="grid-item" onclick="sortTable(10)">New C</div>
+    <div class="grid-item">Actions</div>
+
+</div>
+<div class="grid-container">
+
     <c:forEach items="${persons}" var="person">
-        <tr>
-            <td>${person.id}</td>
-            <td>${person.name}</td>
-            <td>${person.surname}</td>
-            <td>${person.middleName}</td>
-            <td>${person.sex}</td>
-            <td>${person.birthDate}</td>
-            <td>${person.comPersonUniqId}</td>
-            <td>${person.changeDate}</td>
-            <td>${person.active}</td>
-            <td>${person.notificationStatus}</td>
-            <td>${person.newC}</td>
-            <td>${person.oldUsername}</td>
-            <td><a href="http://localhost:8080/update/${person.id}">Edit</a></td>
-            <td><a href="http://localhost:8080/delete/${person.id}">Delete</a></td>
 
+            <div class="grid-item">${person.id}</div>
+            <div class="grid-item">${person.name}</div>
+            <div class="grid-item">${person.surname}</div>
+            <div class="grid-item">${person.middleName}</div>
+            <div class="grid-item">${person.sex}</div>
+            <div class="grid-item">${person.birthDate}</div>
+            <div class="grid-item">${person.comPersonUniqId}</div>
+            <div class="grid-item">${person.changeDate}</div>
+            <div class="grid-item">${person.active}</div>
+            <div class="grid-item">${person.notificationStatus}</div>
+            <div class="grid-item">${person.newC}</div>
+            <div class="grid-item">
+                <a href="http://localhost:8080/update/${person.id}">Edit</a> /
+                <a href="http://localhost:8080/delete/${person.id}">Delete</a>
+            </div>
 
-        </tr>
     </c:forEach>
-    </tbody>
-</table>
+</div>
+
 </body>
 </html>
